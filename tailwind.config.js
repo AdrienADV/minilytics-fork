@@ -1,3 +1,5 @@
+import animate from 'tailwindcss-animate';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/dashboard/**/*.{ts,tsx,html}'],
@@ -11,9 +13,13 @@ export default {
         revenue: '#e07b5f',
         revenueSoft: '#fadbd1',
         visitorsSoft: '#e4f0fc',
+        // shadcn/ui theme tokens (used by components/ui/*), mapped onto our palette.
+        background: '#ffffff',
+        foreground: '#1c1917',
+        muted: { DEFAULT: '#f5f5f4', foreground: '#78716c' },
       },
       boxShadow: { card: '0 1px 2px rgba(28,25,23,0.04), 0 1px 1px rgba(28,25,23,0.02)' },
     },
   },
-  plugins: [],
+  plugins: [animate],
 };

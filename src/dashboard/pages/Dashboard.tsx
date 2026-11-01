@@ -169,7 +169,7 @@ export function Dashboard({ siteId }: { siteId: string }) {
           <LiveView onClose={() => setLive(false)} />
         </Suspense>
       )}
-      <VisitorModal key={visitor ?? 'none'} visitorId={visitor} onClose={() => setVisitor(null)} />
+      {visitor && <VisitorModal key={visitor} visitorId={visitor} onClose={() => setVisitor(null)} />}
     </DashContext.Provider>
   );
 }
