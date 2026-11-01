@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { displayName } from '../../shared/names';
 import { useDash } from '../lib/context';
-import { countryName, fmtAgo } from '../lib/format';
+import { countryName } from '../lib/format';
 import { useApi } from '../lib/useApi';
 import { Avatar, BrowserIcon, DeviceIcon, Favicon, Flag, LinkIcon, OSIcon, SourceIcon } from './Icons';
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from './ui/drawer';
@@ -58,8 +58,6 @@ export function VisitorModal({ visitorId, onClose }: { visitorId: string; onClos
   const last = p?.sessions[0];
   const firstSession = p?.sessions[p.sessions.length - 1];
   const paid = p?.payments.reduce((a, x) => a + (x.kind === 'refund' ? -Math.abs(x.amount) : x.amount), 0) ?? 0;
-  const firstPayment = p?.payments.filter((x) => x.kind === 'payment').at(-1);
-  const pageviews = p?.events.filter((e) => e.type === 'pageview').length ?? 0;
 
   const items = useMemo(() => (p ? journey(p) : []), [p]);
   const days = useMemo(() => groupByDay(newestFirst ? [...items].reverse() : items, site.timezone), [items, newestFirst, site.timezone]);
@@ -114,15 +112,6 @@ export function VisitorModal({ visitorId, onClose }: { visitorId: string; onClos
                       {last.browser && <Fact icon={<BrowserIcon name={last.browser} size={22} />}>{last.browser}</Fact>}
                     </ul>
                   )}
-                  <dl className="mt-6 divide-y divide-dashed divide-stone-200 rounded-xl border border-dashed border-stone-200 text-sm">
-                    <Stat label="Visits" value={String(p.sessions.length)} />
-                    <Stat label="Pageviews" value={String(pageviews)} />
-                    <Stat label="Total spent" value={money(paid)} accent={paid > 0} />
-                    <Stat
-                      label="Time to first payment"
-                      value={firstPayment && p.visitor ? fmtAgo(firstPayment.ts - p.visitor.first_seen) : '—'}
-                    />
-                  </dl>
                 </>
               )}
             </aside>
@@ -282,15 +271,6 @@ function Fact({ icon, children }: { icon: ReactNode; children: ReactNode }) {
       <span className="flex w-7 shrink-0 justify-center">{icon}</span>
       <span className="min-w-0 truncate">{children}</span>
     </li>
-  );
-}
-
-function Stat({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div className="flex items-center justify-between gap-3 px-4 py-2.5">
-      <dt className="text-stone-500">{label}</dt>
-      <dd className={`truncate font-semibold ${accent ? 'text-revenue' : ''}`}>{value}</dd>
-    </div>
   );
 }
 
